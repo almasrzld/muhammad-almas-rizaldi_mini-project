@@ -5,13 +5,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { useShallow } from "zustand/react/shallow";
+import useAuthStore from "@/hook/useAuth";
 
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import ActionAdminMenu from "@/components/common/action-admin-menu";
 
 const Navbar = () => {
   const pathname = usePathname();
+
+  const [data, getUser, logoutHandler] = useAuthStore(
+    useShallow((state) => [state.data, state.getUser, state.logoutHandler])
+  );
   const [isActive, setIsActive] = useState<string>("Homepage");
 
   const NAVBAR_ITEMS = [
@@ -28,6 +35,10 @@ const Navbar = () => {
       path: "/about",
     },
   ];
+
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
 
   useEffect(() => {
     const activeItem = NAVBAR_ITEMS.find((item) => item.path === pathname);
@@ -64,6 +75,14 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
+            {data && (
+              <ActionAdminMenu
+                data={data}
+                logoutHandler={logoutHandler}
+                pathName="Dashboard"
+                pathLink="/dashboard"
+              />
+            )}
           </ul>
         </div>
         <div className="flex md:hidden items-center justify-between py-3">
@@ -103,6 +122,14 @@ const Navbar = () => {
                   </Link>
                 ))}
               </div>
+              {data && (
+                <ActionAdminMenu
+                  data={data}
+                  logoutHandler={logoutHandler}
+                  pathName="Dashboard"
+                  pathLink="/dashboard"
+                />
+              )}
             </SheetContent>
           </Sheet>
         </div>
