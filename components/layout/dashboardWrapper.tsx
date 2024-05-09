@@ -4,18 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { useShallow } from "zustand/react/shallow";
-import { CircleUser, Menu, Package2 } from "lucide-react";
+import { LandPlot, Map, Menu, Package2 } from "lucide-react";
 
 import useAuthStore from "@/hook/useAuth";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import ActionAdminMenu from "../common/action-admin-menu";
 
@@ -40,6 +32,16 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
       title: "Dashboard",
       href: "/dashboard",
       icons: Package2,
+    },
+    {
+      title: "Location",
+      href: "/dashboard/location",
+      icons: Map,
+    },
+    {
+      title: "Field",
+      href: "/dashboard/field",
+      icons: LandPlot,
     },
   ];
 
