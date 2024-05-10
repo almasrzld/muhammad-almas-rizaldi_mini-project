@@ -50,19 +50,23 @@ const FieldDetailsFeature = ({ params }: { params: { slug: string } }) => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <section className="space-y-4 mt-10">
-        <h1 className="text-5xl font-bold">{data?.data.name}</h1>
-        <div className="grid grid-cols-4 gap-5">
+      <section className="space-y-4 mt-6 md:mt-10">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold">
+          {data?.data.name}
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           <div className="relative w-full h-[420px] col-span-3">
             <BlurImage src={data?.data.image} alt={data?.data.name} />
           </div>
           <div className="space-y-2">
-            <div className="text-lg">
+            <div className="text-base md:text-lg">
               <p className="font-semibold">{data?.data.location.name}</p>
-              <p className="text-base">{data?.data.address}</p>
+              <p className="text-sm md:text-base">{data?.data.address}</p>
             </div>
-            <p>{formatIDR(parseInt(data?.data.price))}/ hours</p>
-            <Button className="col-span-4" asChild>
+            <p className="text-sm md:text-base">
+              {formatIDR(parseInt(data?.data.price))}/ hours
+            </p>
+            <Button className="col-span-4 md:block hidden" asChild>
               <a
                 href={`https://wa.me/62895412528975?text=Halo%20saya%20ingin%20booking%20lapangan%20${data?.data.name}%20untuk%20hari%20ini.%20Apakah%20masih%20tersedia?`}
                 target="_blank"
@@ -73,7 +77,18 @@ const FieldDetailsFeature = ({ params }: { params: { slug: string } }) => {
             </Button>
           </div>
         </div>
-        <p className="text-lg">{data?.data.description}</p>
+        <p className="text-sm sm:text-base md:text-lg">
+          {data?.data.description}
+        </p>
+        <Button className="col-span-4 md:hidden flex" asChild>
+          <a
+            href={`https://wa.me/62895412528975?text=Halo%20saya%20ingin%20booking%20lapangan%20${data?.data.name}%20untuk%20hari%20ini.%20Apakah%20masih%20tersedia?`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Book Now
+          </a>
+        </Button>
       </section>
     </main>
   );

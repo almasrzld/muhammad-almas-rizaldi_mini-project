@@ -1,15 +1,14 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-import { formatIDR } from "@/lib/utils";
 import useGetField from "@/features/Dashboard/Field/hook/useGetField";
 import useGetLocation from "@/features/Dashboard/Location/hook/useGetLocation";
 import { ILocationSchema } from "@/features/Dashboard/Location/hook";
 import { IFieldSchema } from "@/features/Dashboard/Field/hook";
-import BlurImage from "@/components/common/image-blur";
+import FieldCard from "@/components/common/field-card";
+import SkeletonFieldCard from "@/components/common/skeleton-field-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -40,24 +39,24 @@ const FieldFeature = () => {
 
   return (
     <main className="container">
-      <section className="my-10 space-y-2">
-        <h1 className="text-5xl font-bold text-center">
+      <section className="my-6 md:my-10 space-y-2">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center">
           Futsal <span className="text-[#E56E00]">Field</span>
         </h1>
-        <h2 className="text-center text-2xl">
+        <h2 className="text-center text-lg sm:text-xl md:text-2xl">
           Reserve now and play with your friends. Play with sportsmanship!
         </h2>
       </section>
       <section className="mb-5">
-        <div className="flex items-center justify-between">
+        <div className="flex md:flex-row flex-col items-center justify-between gap-2">
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search Field"
-            className="w-[300px]"
+            className="w-full md:w-[300px]"
           />
           <Select onValueChange={setLocation} value={location}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full md:w-[180px]">
               <SelectValue placeholder="Select a location" />
             </SelectTrigger>
             <SelectContent>
@@ -78,38 +77,12 @@ const FieldFeature = () => {
             </SelectContent>
           </Select>
         </div>
-        <div className="grid grid-cols-4 gap-4 mt-10 mb-10">
+        <div className="grid sm:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-4 mt-10 mb-10">
           {isLoading ? (
-            Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="border bg-white rounded-lg p-2">
-                <div className="animate-pulse h-80 bg-gray-300 rounded-lg" />
-                <div className="space-y-1 mt-2">
-                  <div className="h-5 bg-gray-300 w-1/2 rounded-sm" />
-                  <div className="h-3 bg-gray-300 w-full rounded-sm" />
-                  <div className="h-3 bg-gray-300 w-full rounded-sm" />
-                </div>
-              </div>
-            ))
+            <SkeletonFieldCard />
           ) : data?.data.results.length > 0 ? (
             data?.data.results.map((item: IFieldSchema) => (
-              <div
-                key={item.id}
-                className="relative group border bg-white rounded-lg transition-all p-2"
-              >
-                <div className="relative h-80">
-                  <BlurImage src={item.image} alt={item.name} />
-                  <div className="absolute top-0 left-0 rounded-lg bg-orange-400/30 w-full h-full group-hover:bg-transparent transition-colors" />
-                </div>
-                <div className="space-y-1 mt-2">
-                  <h3 className="text-lg font-semibold">{item.name}</h3>
-                  <p>{item.location.name}</p>
-                  <p className="line-clamp-1 text-sm">{item.description}</p>
-                  <p>{formatIDR(parseInt(item.price))}/ hours</p>
-                </div>
-                <Button className="mt-2" asChild>
-                  <Link href={`/field/${item.slug}`}>See Details</Link>
-                </Button>
-              </div>
+              <FieldCard key={item.id} item={item} details />
             ))
           ) : (
             <div className="text-center col-span-4">No data found</div>

@@ -94,7 +94,7 @@ const Navbar = () => {
           />
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon">
+              <Button size="icon">
                 <HamburgerMenuIcon />
               </Button>
             </SheetTrigger>
