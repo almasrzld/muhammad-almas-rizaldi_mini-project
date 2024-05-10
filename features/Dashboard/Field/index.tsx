@@ -1,14 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowLeft, ArrowRight, MapPin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useDebounce } from "use-debounce";
-import { z } from "zod";
-import { MapPin } from "lucide-react";
-import useGetLocation from "../Location/hook/useGetLocation";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -19,35 +16,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useGetLocation from "../Location/hook/useGetLocation";
 import { ILocationSchema } from "../Location/hook";
 import useGetField from "./hook/useGetField";
-
-export const FieldSchema = z.object({
-  name: z.string(),
-  slug: z.string(),
-  image: z.string(),
-  address: z.string(),
-  description: z.string(),
-  location: z.object({
-    _id: z.string(),
-    name: z.string(),
-    createdAt: z.string(),
-    updatedAt: z.string(),
-  }),
-  price: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  id: z.string(),
-});
-
-export type IFieldSchema = z.infer<typeof FieldSchema>;
+import useDashboardFieldFeature, { IFieldSchema } from "./hook";
 
 const DashboardFieldFeature = () => {
-  const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
-  const [search, setSearch] = useState<string>("");
-  const [value] = useDebounce(search, 500);
-  const [location, setLocation] = useState<string>("");
+  const {
+    page,
+    setPage,
+    limit,
+    search,
+    setSearch,
+    value,
+    location,
+    setLocation,
+  } = useDashboardFieldFeature();
 
   const { data, isLoading } = useGetField(page, limit, value, location);
 
@@ -128,6 +112,26 @@ const DashboardFieldFeature = () => {
                 <p className="text-sm line-clamp-2">{field.description}</p>
               </div>
             ))}
+      </div>
+      <div className="mt-5">
+        {data?.data.totalPages > 1 && (
+          <div className="flex items-center justify-between">
+            <Button
+              disabled={data?.data.currentPage === 1 || isLoading}
+              onClick={() => setPage((prev) => prev - 1)}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              <p>Previous Page</p>
+            </Button>
+            <Button
+              disabled={data?.data.totalPages === page || isLoading}
+              onClick={() => setPage((prev) => prev + 1)}
+            >
+              <ArrowRight className="mr-2 h-4 w-4" />
+              <p>Next Page</p>
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
