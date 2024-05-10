@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -115,16 +117,24 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="bg-[#E56E00] py-[34px]">
+      <div className="bg-[#E56E00] py-6">
         <div className="container flex justify-between items-center">
           <p className="text-white text-xl">
             © Copyright <span className="font-bold">AlcaBris.</span> All Rights
             Reserved
           </p>
-          <div className="flex justify-center items-center gap-2">
-            <p className="text-white text-xl">Scroll To Top</p>
+          <button
+            className="flex justify-center items-center gap-2"
+            onClick={() => {
+              if (typeof window !== "undefined")
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            <p className="text-white text-xl hover:text-white/80 transition-opacity">
+              Scroll To Top
+            </p>
             <TopIcon />
-          </div>
+          </button>
         </div>
       </div>
     </footer>
