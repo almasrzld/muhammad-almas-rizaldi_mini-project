@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useMutation } from "@tanstack/react-query";
-import { Languages, X } from "lucide-react";
+import { Bot, RefreshCcw, X } from "lucide-react";
 
-import { RAPID_API_HOST, RAPID_API_KEY } from "@/constants/config";
+import { GOOGLE_API_KEY } from "@/constants/config";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -16,47 +16,61 @@ import {
 } from "@/components/ui/tooltip";
 
 const TranslateAction = () => {
-  const [anwer, setAnswer] = useState("");
+  const [anwer, setAnswer] = useState<string[]>([]);
+  const [inputDump, setInputDump] = useState<string[]>([]);
   const [input, setInput] = useState("");
-  const [inputDump, setInputDump] = useState("");
 
   const [isVisible, setIsVisible] = useState(false);
 
-  const options = {
-    method: "POST",
-    url: "https://google-translator9.p.rapidapi.com/v2",
-    headers: {
-      "content-type": "application/json",
-      "X-RapidAPI-Key": RAPID_API_KEY,
-      "X-RapidAPI-Host": RAPID_API_HOST,
+  const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY || "");
+
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+  const chat = model.startChat({
+    generationConfig: {
+      temperature: 1,
+      topK: 0,
+      topP: 0.95,
+      maxOutputTokens: 8192,
     },
-    data: {
-      q: input,
-      source: "en",
-      target: "id-ID",
-      format: "text",
-    },
-  };
+  });
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      const response = await axios.request(options);
-      return response.data;
+      const result = await chat.sendMessage(input);
+      const response = await result.response;
+      const text = response.text();
+      return text;
     },
     onSuccess: (data) => {
-      setInputDump(input);
-      setAnswer(data?.data?.translations[0]?.translatedText);
+      setInputDump((prev) => [...prev, input]);
+      setAnswer((prev) => [...prev, data]);
       setInput("");
     },
+    onError: (error) => {
+      console.error(error);
+    },
   });
+
   return (
-    <div className="fixed bottom-0 right-0 m-5 items-end gap-2 hidden sm:flex">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        mutate();
+      }}
+      className="fixed bottom-0 right-0 m-5 z-40 items-end gap-2 hidden sm:flex"
+    >
       {isVisible && (
         <div className="flex flex-col gap-1 w-[320px]">
-          {inputDump && (
+          {inputDump.length > 0 && (
             <div className="bg-white text-sm p-1 rounded-md space-y-2">
-              <p>Q: {inputDump}</p>
-              <p>A: {anwer}</p>
+              {inputDump.map((input, index) => (
+                <div key={index}>
+                  <p>Q: {input}</p>
+                  <article className="prose prose-sm">
+                    A: {anwer[index]}
+                  </article>
+                </div>
+              ))}
             </div>
           )}
           <Textarea
@@ -70,16 +84,35 @@ const TranslateAction = () => {
 
       {isVisible ? (
         <div className="flex flex-col gap-2 items-end">
-          <Button
-            size="icon"
-            variant="destructive"
-            className="h-6 w-6"
-            onClick={() => setIsVisible(false)}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-          <Button onClick={() => mutate()} disabled={isPending}>
-            {inputDump ? "Translate Again" : "Translate"}
+          <div className="flex items-center justify-end gap-2">
+            <Button
+              size="icon"
+              variant="outline"
+              className="h-6 w-6"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setInputDump([]);
+                setAnswer([]);
+              }}
+            >
+              <RefreshCcw className="h-3 w-3" />
+            </Button>
+            <Button
+              size="icon"
+              variant="destructive"
+              className="h-6 w-6"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsVisible(false);
+              }}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Loading..." : "Send"}
           </Button>
         </div>
       ) : (
@@ -89,18 +122,22 @@ const TranslateAction = () => {
               <Button
                 size="icon"
                 className="rounded-full"
-                onClick={() => setIsVisible(true)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsVisible(true);
+                }}
               >
-                <Languages className="w-4 h-4" />
+                <Bot className="w-4 h-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="left">
-              <p>Translate</p>
+              <p>Ask AI</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       )}
-    </div>
+    </form>
   );
 };
 
