@@ -15,9 +15,10 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import BlurImage from "@/components/common/image-blur";
+import NotFoundDetails from "@/components/layout/not-found-details";
 
 const FieldDetailsFeature = ({ params }: { params: { slug: string } }) => {
-  const { data, isLoading } = useGetFieldDetails(params.slug);
+  const { data, isLoading, isError } = useGetFieldDetails(params.slug);
 
   if (isLoading) {
     return (
@@ -34,6 +35,8 @@ const FieldDetailsFeature = ({ params }: { params: { slug: string } }) => {
       </div>
     );
   }
+
+  if (isError) return <NotFoundDetails />;
 
   return (
     <main className="container mb-20">

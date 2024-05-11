@@ -20,6 +20,7 @@ import { useMutation } from "@tanstack/react-query";
 import { axiosInstanceToken } from "@/lib/axios";
 import { toast } from "sonner";
 import { setCookie } from "@/lib/utils";
+import BlurImage from "@/components/common/image-blur";
 
 export const UserSchema = z.object({
   id: z.string().optional(),
@@ -108,14 +109,8 @@ const AuthLoginFeature = () => {
           </Form>
         </div>
       </div>
-      <div className="hidden h-[100vh] bg-muted lg:block">
-        <Image
-          src="/placeholder.svg"
-          alt="Image"
-          width="1920"
-          height="1080"
-          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
+      <div className="hidden h-[100vh] bg-muted lg:block relative">
+        <BlurImage src="/images/bg-auth.png" alt="Image" />
       </div>
       <div className="absolute left-0 top-0 m-5">
         <ActionBackToHome />
