@@ -107,7 +107,7 @@ const DashboardFieldFeature = () => {
                 <h2 className="font-semibold text-lg">{field.name}</h2>
                 <p className="text-sm inline-flex items-center justify-center">
                   <MapPin className="w-4 h-4 mr-1" />
-                  {field.location.name}
+                  {field?.location?.name}
                 </p>
                 <p className="text-sm line-clamp-2">{field.description}</p>
               </div>
