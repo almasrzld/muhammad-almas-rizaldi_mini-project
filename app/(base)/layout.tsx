@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import TranslateAction from "@/components/layout/translate-action";
+import AOSInitializer from "@/lib/aos";
 
 const BaseLayout = ({
   children,
@@ -10,6 +11,7 @@ const BaseLayout = ({
 }>) => {
   return (
     <>
+      <AOSInitializer />
       <Navbar />
       <div className="">{children}</div>
       <Footer />

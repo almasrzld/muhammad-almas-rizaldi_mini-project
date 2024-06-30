@@ -57,3 +57,74 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes slide-up-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-25%);
+  }
+}
+
+@keyframes slide-up-in {
+  0% {
+    opacity: 0;
+    transform: translateY(25%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-up-out {
+  display: inline-block;
+  animation: slide-up-out 1.5s forwards;
+}
+
+.slide-up-in {
+  display: inline-block;
+  animation: slide-up-in 1.5s forwards;
+}
+
+@keyframes slide-from-right {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-from-right {
+  animation: slide-from-right 1s forwards;
+}
+
+/* knowlade */
+.slide-down-section {
+  opacity: 0;
+  transform: translateY(-40px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.slide-down-section.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* button */
+.slide-button-right {
+  opacity: 0;
+  transform: translateX(2%);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.slide-button-right.in-view {
+  opacity: 1;
+  transform: translateX(0);
+}

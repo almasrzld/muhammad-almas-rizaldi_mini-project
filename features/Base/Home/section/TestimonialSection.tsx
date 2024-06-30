@@ -1,39 +1,50 @@
 import { StarFilledIcon } from "@radix-ui/react-icons";
-import { Star } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
 const TestimonialSection = () => {
   const TESTIMONIALS = [
     {
-      name: "John Doe",
+      name: "Cristiano Ronaldo",
       image: "/images/testimoni-people.png",
       star: 5,
       comment: "“ The best futsal field I have ever rented. ”",
+      animation: "zoom-in-right",
     },
     {
-      name: "Jane Doe",
+      name: "Lionel Messi",
       image: "/images/testimoni-people.png",
       star: 4,
       comment:
         "“ Comfortable place, fast admin response, very trusted rental place, lots of choices, well maintained field, very modern technology, and very fair referee management. “",
+      animation: "zoom-in-up",
     },
     {
-      name: "John Doe",
+      name: "M. Tahir",
       image: "/images/testimoni-people.png",
       star: 5,
       comment:
         "“ Clean, comfortable, reliable, just the best. You all must make a reservation on the Alcabris Soccer website! “",
+      animation: "zoom-in-left",
     },
   ];
 
   return (
     <section className="container mt-10 mb-20">
-      <h2 className="text-5xl text-center font-bold">Testimonial</h2>
+      <h2
+        className="text-5xl text-center font-bold"
+        data-aos="fade-up"
+        data-aos-duration="1000"
+      >
+        Testimonial
+      </h2>
       <div className="flex md:flex-row flex-col items-center justify-center gap-20 md:gap-5 mt-24">
         {TESTIMONIALS.map((item, index) => (
           <div
             key={index}
+            data-aos={item.animation}
+            data-aos-duration="1000"
+            data-aos-delay={`${index * 200}`}
             className="bg-[#242222] text-white rounded-[20px] relative p-5 shadow-md w-[300px] flex flex-col items-center"
           >
             <Image
